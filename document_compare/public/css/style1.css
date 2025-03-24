@@ -1,0 +1,892 @@
+/*@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Works in Firefox */
+/* * {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+  } */
+
+/* Scrollbar container */
+::-webkit-scrollbar {
+    width: 12px;
+    /* Width of vertical scrollbar */
+    height: 12px;
+    /* Height of horizontal scrollbar */
+}
+
+/* Scrollbar track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    /* Track color */
+    border-radius: 10px;
+}
+
+/* Scrollbar thumb (the draggable part) */
+::-webkit-scrollbar-thumb {
+    background-color: #888;
+    /* Thumb color */
+    border-radius: 10px;
+    border: 3px solid #f1f1f1;
+    /* Optional: adds padding inside thumb */
+}
+
+/* Hover effect on thumb */
+::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+/* Corner of scrollbar (when both vertical and horizontal scrollbars are visible) */
+::-webkit-scrollbar-corner {
+    background: #f1f1f1;
+}
+
+
+body {
+    font-family: "Poppins", serif;
+    font-weight: 400;
+    font-style: normal;
+    min-height: 100vh;
+    background-color: rgb(247, 248, 248);
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 250px;
+    padding: 10px 14px;
+    border: 1px solid #e6e5e5;
+    transition: all 0.5s ease;
+}
+
+nav .list-items {
+    margin-top: 80px;
+    height: calc(100% - 90px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: auto;
+}
+
+.list-items li {
+    list-style: none;
+    background-color: #fff;
+    margin: 5px;
+    padding: 0 10px;
+    height: 77px;
+    overflow-y: clip;
+}
+
+.list-items li a {
+    display: flex;
+    text-decoration: none;
+    position: relative;
+    font-size: 14px;
+}
+
+.list-items li a .link-name {
+    color: #17191c;
+    font-weight: 400;
+    font-size: 12px;
+    transition: all 0.5s ease;
+}
+
+.dashboard {
+    background-color: rgb(247, 248, 248);
+    /* width: calc(100% - 250px);  */
+    position: relative;
+    min-height: 100vh;
+    padding: 10px 14px;
+    text-align: center;
+    transition: all 0.5s ease;
+}
+
+.dashboard h2 {
+    margin: 10px;
+}
+
+.dashboard .title {
+    margin: 5px 0 5px 0;
+    text-align: center;
+    display: flex;
+    justify-content: space-around;
+}
+
+.browseFile {
+    display: flex;
+    justify-content: space-around;
+    width: calc(100% / 2 - 15px);
+}
+
+.btn-wrapper {
+    text-align: center;
+}
+
+.primary-btn {
+    padding: 10px 11px;
+    cursor: pointer;
+    background-color: #4da3ff;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-family: 'Poppins';
+    font-size: 15px;
+}
+
+.primary-btn:hover {
+    background-color: #3f80c7;
+}
+
+.dash-content .boxes {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dash-content .boxes .box {
+    padding: 15px 20px;
+    background-color: #fff;
+    width: calc(100% / 2 - 10px);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /* min-height: 450px; */
+    height: 755px;
+    border: 2px dashed #5fb63f;
+    overflow: auto;
+    /* margin: 15px; */
+}
+
+.boxes .box.box2 {
+    background-color: #fff;
+    border: 1px solid #3A3B3C;
+}
+
+.inner-box {
+    width: 100%;
+    height: 100%;
+}
+
+.output-wrapper {
+    /* padding-top: 20px; */
+    text-align: justify;
+    font-size: 12px;
+    overflow: auto;
+}
+
+pre {
+    white-space: pre-wrap !important;
+    /* Allow wrapping */
+}
+
+.label-txt {
+    font-size: 10px;
+    text-transform: uppercase;
+    ;
+    padding: 0 5px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.added-txt {
+    color: #064;
+    background-color: #8ee0b6;
+}
+
+.moved-txt {
+    color: #006aff;
+    background-color: #80caff;
+}
+
+.removed-txt {
+    color: #db1818;
+    background-color: #f3a3a3;
+}
+
+#match-filter {
+    margin-left: 20px !important;
+}
+
+.three_icons,
+.pageIndex {
+    /*display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 20px;
+    align-items: center;
+    justify-content: center;
+    position:absolute;
+    bottom:5px;
+    right:-90px;*/
+
+}
+
+.three_icons {
+    padding: 10px 0;
+    bottom: 10px;
+    position: relative;
+}
+
+.icon-group {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+    height: 30px;
+    /* Match product item height */
+}
+
+.three_icons .icon-group {
+    float: right
+}
+
+.pageNo {
+    float: left;
+}
+
+.icon-group i {
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+/* css for hover three-icons */
+
+.icon-group i:hover {
+    transform: translateY(-2px);
+}
+
+/* newly added */
+#navbar {
+    background-color: #fff;
+    padding: 10px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    color: #fff;
+    display: inline-flex;
+    width: 100%;
+    align-items: center;
+    color: #444;
+    border-bottom: 1px solid #ccc;
+}
+
+#navbar span img {
+    width: 200px;
+}
+
+#navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#navbar ul li {
+    display: inline;
+    margin: 0 5px;
+}
+
+#navbar ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.card_section {
+    margin: 10px;
+    border: 1px solid #ddd;
+    width: 97%;
+    /*display: flex;*/
+    align-items: center;
+    /*text-align: center;*/
+    transition: opacity 0.5s, filter 0.5s;
+    /* height: 60px;  Fixed height for alignment */
+    justify-content: space-between;
+    padding: 10px 15px;
+}
+
+.fa-check {
+    color: #5fb63f;
+}
+
+.fa-times {
+    color: #df4545;
+}
+
+.fa-hourglass-half {
+    color: #ffb800;
+}
+
+.pageNo,
+.page2No {
+    color: #7e7e7e;
+    font-size: 14px;
+}
+
+.page2No {
+    /*height: 60px;*/
+    width: 90px;
+    /*display: flex;*/
+    align-items: end;
+}
+
+.action-filter {
+    margin: 5px;
+    padding: 10px 5px;
+    /* border-radius: 25px; */
+    font-weight: 700;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /* border: 1px solid #999; */
+
+}
+
+.action-filter:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+#match-filter {
+    margin-right: 15px;
+}
+
+.action-filter span {
+    margin-left: 10px;
+}
+
+.three_icons.icon-group i {
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.icon-group i.active {
+    color: green;
+    transform: scale(1.3);
+}
+
+.icon-group i.faded {
+    opacity: 0;
+    color: #b3b7b2;
+}
+
+/* Added by Rishabh */
+.added-txt {
+    color: #064;
+    background-color: #8ee0b6;
+}
+
+.moved-txt {
+    color: #006aff;
+    background-color: #80caff;
+}
+
+.removed-txt {
+    color: #db1818;
+    background-color: #f3a3a3;
+}
+
+.doc1-txt {
+    color: #080808;
+    background-color: #fcba03;
+    font-size: 10px;
+    text-transform: uppercase;
+    ;
+    padding: 0 5px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.doc2-txt {
+    color: #080808;
+    background-color: #fab6f8;
+    font-size: 10px;
+    text-transform: uppercase;
+    ;
+    padding: 0 5px;
+    border-radius: 4px;
+    font-weight: 500;
+    text-align: right;
+}
+
+/*
+.exact_matched_highlight_span{
+    color: #000;
+    border-radius: 4px;
+    background-color: #fab6f8;
+}*/
+.replaced_highlight_span {
+    color: #000;
+    border-radius: 4px;
+    background-color: #fcba03;
+}
+
+.removed_highlight_span {
+    color: #000;
+    border-radius: 4px;
+    background-color: #f3a3a3;
+}
+
+.added_highlight_span {
+    color: #000;
+    border-radius: 4px;
+    background-color: #8ee0b6;
+}
+
+.highlight_a {
+    color: #000000;
+    text-decoration: none;
+    font-weight: bold;
+    border: 2px solid #09ff01;
+    padding: 10px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.card_section {
+    cursor: pointer;
+    background-color: #fff !important;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: 97%;
+    margin: 15px auto;
+    font-family: Arial, sans-serif;
+    position: relative;
+}
+
+.card_section:hover {
+    background-color: #f7f5f5 !important;
+}
+
+/* Border colors for different change types outline-color: red;
+.matched { color: green; }
+.replaced { color: orange; }
+.added { color: blue; }
+.removed { color: red; } */
+
+.matched {
+    outline-offset: 3px;
+    outline: 2px solid green;
+}
+
+.replaced {
+    outline-offset: 3px;
+    outline: 2px solid orange;
+}
+
+.added {
+    outline-offset: 3px;
+    outline: 2px solid blue;
+}
+
+.removed {
+    outline-offset: 3px;
+    outline: 2px solid red;
+}
+
+
+/* Loader class */
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #000;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.badge {
+    background-color: #5fb63f;
+    color: white;
+    padding: 4px 8px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+/*tooltip css*/
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.tooltip .tooltip-text {
+    visibility: hidden;
+    width: 100px;
+    background-color: black;
+    color: white;
+    text-align: center;
+    padding: 5px;
+    border-radius: 5px;
+    position: absolute;
+    bottom: -82%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    opacity: 0;
+    transition: 0.3s ease-in-out;
+
+    white-space: nowrap;
+    /* Prevents text from wrapping */
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+#navbar {
+    background-color: #fff;
+    padding: 10px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    color: #fff;
+    display: inline-flex;
+    width: 100%;
+    align-items: center;
+    color: #444;
+    border-bottom: 1px solid #ccc;
+}
+
+#navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#navbar ul li {
+    display: inline;
+    margin: 0 5px;
+}
+
+#navbar ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+main {
+    padding: 20px;
+}
+
+.product {
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #ddd;
+    width: 400px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    transition: opacity 0.5s, filter 0.5s;
+    /* Smooth fade effect */
+}
+
+.dash-content .boxes .box {
+    border: 2px dashed #5fb63f;
+}
+
+/* verify btn */
+
+.verify-btn {
+    background: #007bff;
+    color: white;
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.verify-btn:hover {
+    background: #0056b3;
+}
+
+.verify-btn,
+.notverify-btn {
+    display: block;
+    margin: 5px;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+.verify-btn {
+    background: #28a745;
+    color: white;
+}
+
+.verify-btn:hover {
+    background: #218838;
+}
+
+.notverify-btn {
+    background: #df4545;
+    color: white;
+}
+
+.notverify-btn:hover {
+    background: #ce3333;
+}
+
+/*  */
+
+.custom-file-input {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+}
+
+.custom-file-label {
+    display: block;
+    background-color: #efefef;
+    color: #17191c;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.custom-file-input input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.file-name {
+    display: block;
+    margin-top: 5px;
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+}
+
+#match-filter {
+    margin-left: 15px !important;
+}
+
+#match-filter li label {
+    font-size: 13px;
+}
+
+.action_icon img {
+    height: 25px;
+    width: 25px;
+}
+
+.select-box label {
+    font-size: 13px;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#output1,
+#output2 {
+    position: relative;
+    /* Helps LeaderLine with correct offsets */
+}
+
+.m-left {
+    margin-left: 20px;
+}
+
+.filters {
+    width: 84%;
+    display: ruby;
+}
+
+progress {
+    border: none;
+    border-radius: 5px;
+    background-color: #f3f3f3;
+}
+
+progress::-webkit-progress-bar {
+    background-color: #f3f3f3;
+    border-radius: 5px;
+}
+
+progress::-webkit-progress-value {
+    background-color: #4caf50;
+    border-radius: 5px;
+}
+
+progress::-moz-progress-bar {
+    background-color: #4caf50;
+    border-radius: 5px;
+}
+
+/* Skeleton loading effect */
+.skeleton {
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-text {
+    height: 20px;
+    width: 80%;
+    margin-bottom: 8px;
+}
+
+.skeleton-line {
+    height: 15px;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.skeleton-card {
+    height: 100px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+@keyframes pulse {
+    0% {
+        background-color: #e0e0e0;
+    }
+    50% {
+        background-color: #f0f0f0;
+    }
+    100% {
+        background-color: #e0e0e0;
+    }
+}
+
+/* Style for Previous and Next buttons */
+.nav-btn {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 6px 10px;
+    margin: 2px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3sease, transform 0.2sease;
+}
+
+/* Hover effect */
+.nav-btn:hover {
+    background-color: #45a049; /* Slightly darker green */
+    transform: scale(1.1); /* Subtle zoom effect */
+}
+
+/* Active click effect */
+.nav-btn:active {
+    background-color: #3e8e41;
+    transform: scale(0.95);
+}
+
+ul#match-filter li {
+    margin-bottom: 10px;
+}
+
+input[type="checkbox"] {
+    transform: scale(1.2); /* Make checkboxes slightly larger */
+    margin-right: 5px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-icon {
+    font-size: 24px;
+    color: #333;
+}
+
+.user-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: #555;
+}
+/* Hidden checkbox for toggle */
+.user-dropdown-toggle {
+    display: none;
+}
+
+/* Dropdown menu */
+.user-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 120px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+/* Dropdown links */
+.user-dropdown a {
+    display: block;
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+}
+
+/* Hover effect */
+.user-dropdown a:hover {
+    background-color: #f4f4f4;
+}
+
+/* Show dropdown when checkbox is checked */
+.user-dropdown-toggle:checked + .user-dropdown {
+    display: block;
+}
+
+/* Optional: Style label as clickable */
+.user-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}

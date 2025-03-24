@@ -64,6 +64,12 @@ app_license = "mit"
 # 	"Role": "home_page"
 # }
 
+# website_route_rules = [
+#     {"from_route": "/home", "to_route": "home"},
+#     {"from_route": "/compare", "to_route": "compare"}
+# ]
+
+
 # Generators
 # ----------
 

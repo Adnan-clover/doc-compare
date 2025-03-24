@@ -1,0 +1,115 @@
+{% extends "templates/web.html" %}
+
+{% block head %}
+    <link rel="stylesheet" href="/assets/document_compare/css/bootstrap.css">
+    <script src="/assets/document_compare/js/bootstrap.js"></script>
+    <script src="/assets/document_compare/js/script1.js"></script>
+{% endblock %}
+
+{% block page_content %}
+<!-- Bootstrap Navbar -->
+<div class="container my-4">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="fileInput1" class="form-label"><span class="badge bg-success rounded-pill"
+                        style="font-size: 15px">Original File</span>
+                    <span class="text-danger">(Max upload file size: 2MB)</span></label>
+                <input class="form-control" type="file" id="fileInput1" name="file1" accept=".docx" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="fileInput2" class="form-label">
+                    <span class="badge bg-success rounded-pill" style="font-size: 15px">Modified File</span>
+                    <span class="text-danger">(Max upload file size: 2MB)</span></label>
+                <input class="form-control fileInput" type="file" id="fileInput2" name="file2" accept=".docx" />
+            </div>
+        </div>
+        <div class="row my-3">
+            <div class="col-12 text-center">
+                <input type="hidden" name="csrf_token" value="{{ frappe.session.csrf_token }}">
+                <button class="btn btn-primary rounded-pill" id="upload_btn">
+                     Upload Files
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress my-3" style="display: none" id="progressContainer">
+        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
+            style="width: 0%" id="progressBar">
+            0%
+        </div>
+    </div>
+
+    <!-- {% if messages %} 
+    {% for message in messages %} -->
+    <!-- <div class="alert alert-success alert-dismissible fade show my-2" role="alert">
+        <strong>{{ message }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div> -->
+    <!-- {% endfor %} 
+    {% endif %} -->
+    <div class="tableFixHead my-4">
+        <table class="table table-hover">
+            <thead style="position: sticky">
+                <tr class="table-dark">
+                    <th scope="col">Sr.No</th>
+                    <th scope="col"><i class="fa fa-file-word"></i> Original Docx</th>
+                    <th scope="col"><i class="fa fa-file-word"></i> Modified Docx</th>
+                    <th scope="col"><i class="fa fa-clock"></i> Created at</th>
+                    <th scope="col"><i class="fa fa-clock"></i> Updated at</th>
+                    <th scope="col"><i class="fas fa-tasks"></i> Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- {% if doc %} 
+                {% for data in doc %} -->
+                <tr style="max-height: 400px; overflow-y: auto">
+                    <!-- <th scope="row">{{forloop.counter}}</th>
+                    <td class="text-truncate" data-bs-toggle="tooltip" title="{{ data.original_doc }}">
+                        {{data.original_doc}}
+                    </td>
+                    <td class="text-truncate" data-bs-toggle="tooltip" title="{{ data.modified_doc }}">
+                        {{data.modified_doc}}
+                    </td>
+                    <td>{{data.created_at}}</td>
+                    <td>{{data.updated_at}}</td> -->
+                    <th scope="row">1</th>
+                    <td class="text-truncate" data-bs-toggle="tooltip" title="{{ data.original_doc }}">
+                    </td>
+                    <td class="text-truncate" data-bs-toggle="tooltip" title="{{ data.modified_doc }}">
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <!-- <button class="btn btn-outline-success btn-sm rounded-pill"
+                            onclick="viewEditDocument({{ data.id }})">
+                            View & Edit
+                        </button> -->
+                        <button class="btn btn-outline-success btn-sm rounded-pil">
+                        View & Edit
+                        </button>
+                        <!-- <button type="button" class="btn btn-outline-danger rounded-circle btn-sm mx-2"
+                            data-bs-toggle="modal" data-bs-target="#deleteModal-{{ data.id }}">
+                            <i class="fa fa-trash"></i>
+                        </button> -->
+                        <button type="button" class="btn btn-outline-danger rounded-circle btn-sm mx-2"
+                        data-bs-toggle="modal" data-bs-target="#deleteModal">
+                        <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                <!-- {% endfor %} 
+                {% else %} -->
+                <tr>
+                    <td colspan="6" class="text-center">No data found</td>
+                </tr>
+                <!-- {% endif %} -->
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

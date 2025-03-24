@@ -1,0 +1,140 @@
+{% extends "templates/web.html" %}
+
+{% block head %}
+    <link rel="stylesheet" href="/assets/document_compare/css/style1.css">
+    <link rel="stylesheet" href="/assets/document_compare/css/all-min.css">
+    <script src="/assets/document_compare/js/script.js"></script>
+{% endblock %}
+
+{% block page_content %}
+<section id="navbar">
+    <div class="btn-wrapper">
+        <a href="#"><button style="width: 85px;" class="primary-btn"><i class="fa fa-home"></i>
+                Home</button></a>
+    </div>
+    <div class="btn-wrapper m-left">
+        <button style="width: 120px;" class="primary-btn" id="findDiffBtn">Compare <i
+                class="fas fa-exchange-alt"></i></button>
+        <button style="width: 120px;" class="primary-btn" id="reAnalyzeBtn" onclick="reAnalyzeCompareData();"><i
+                class="fas fa-sync-alt"></i> Re-analyze</button>
+    </div>
+    <div class="filters">
+        <ul id="match-filter">
+            <li>
+                <label>
+                    <input type="checkbox" class="filter-checkbox" value="all" />
+                    All
+                </label>
+            </li>
+            <li>
+                <button class="nav-btn prev-btn" data-type="matched"><i class="fa fa-arrow-left"></i></button>
+                <label>
+                    <input type="checkbox" class="filter-checkbox" value="matched" />
+                    Matched (0)
+                </label>
+
+                <button class="nav-btn next-btn" data-type="matched"><i class="fa fa-arrow-right"></i></button>
+            </li>
+            <li>
+                <label>
+                    <button class="nav-btn prev-btn" data-type="added"><i class="fa fa-arrow-left"></i></button>
+                    <input type="checkbox" class="filter-checkbox" value="added" />
+                    Added (0)
+                </label>
+                <button class="nav-btn next-btn" data-type="added"><i class="fa fa-arrow-right"></i></button>
+            </li>
+            <li>
+                <label>
+                    <button class="nav-btn prev-btn" data-type="removed"><i class="fa fa-arrow-left"></i></button>
+                    <input type="checkbox" class="filter-checkbox" value="removed" />
+                    Removed (0)
+                </label>
+                <button class="nav-btn next-btn" data-type="removed"><i class="fa fa-arrow-right"></i></button>
+            </li>
+        </ul>
+        <div class="icon-group" id="icon-filter">
+            <div class="action-filter tooltip">
+                <i class="fas fa-check"></i>
+                <span> </span>
+                <span class="tooltip-text">Accepted</span>
+            </div>
+            <div class="action-filter tooltip">
+                <i class="fas fa-times"></i>
+                <span> </span>
+                <span class="tooltip-text">Rejected</span>
+            </div>
+            <div class="action-filter tooltip">
+                <i class="fas fa-hourglass-half"></i>
+                <span> </span>
+                <span class="tooltip-text">Pending</span>
+            </div>
+            <div class="action-filter tooltip">
+                <i class="fas fa-layer-group" style="color: #ff6b6b;"></i>
+                <span> </span>
+                <span class="tooltip-text">Total Count</span>
+            </div>
+        </div>
+    </div>
+    <!-- User Icon and Active User Name -->
+    <div style="border:1px solid #ccc; border-radius: 14px; padding: 5px; margin-right: 10px;">
+        <div class="user-info">
+            <label for="userDropdownToggle" class="user-label">
+                <i class="fas fa-user-circle user-icon"></i>
+                <span class="user-name"></span>
+            </label>
+            <input type="checkbox" id="userDropdownToggle" class="user-dropdown-toggle">
+
+            <!-- Dropdown Menu -->
+            <div class="user-dropdown">
+                <a href="#" class="logout-link">Logout</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--<progress id="file" value="0" max="100"
+    style="display: none; width: 100%; height: 5px; border-radius: 5px; overflow: hidden;"></progress> -->
+
+<section class="dashboard" id="dashboard">
+    <div class="dash-content">
+        <div id="uploaded_files">
+            <div class="title">
+                <h4 class="badge">Original Doc : </h4><span style="text-align: left" id="original_name"></span>
+                <h4 class="badge">Modified Doc : </h4><span style="text-align: left" id="modified_name"></span>
+            </div>
+            <center><span class="loader" id="loader" style="display: none;"></span></center>
+            <br>
+            <div class="boxes">
+                <div class="box" id="box1">
+                    <div class="inner-box">
+                        <div class="output-wrapper">
+                            <div class="product-container fileOutput" id="output1">
+                                <!--                                    <pre id="output1" class="fileOutput"></pre>-->
+                                <div class="three_icons">
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="box" id="box2">
+                    <!--                        <div class="pageIndex">-->
+
+                    <!--                    </div>-->
+                    <div class="inner-box">
+                        <div class="output-wrapper">
+                            <div class="product-container fileOutput" id="output2">
+                                <!--                                    <pre id="output2" class="fileOutput"></pre>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
