@@ -26,7 +26,17 @@ app_license = "mit"
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/document_compare/css/document_compare.css"
+app_include_css =  [
+    "/assets/document_compare/public/css/all-min.css",
+    "/assets/document_compare/public/css/bootstrap.css",
+    "/assets/document_compare/public/css/style1.css"
+]
 # app_include_js = "/assets/document_compare/js/document_compare.js"
+app_include_js = [
+    "/assets/document_compare/public/js/bootstrap.js",
+    "/assets/document_compare/public/js/script.js",
+    "/assets/document_compare/public/js/script1.js"
+]
 
 # include js, css files in header of web template
 # web_include_css = "/assets/document_compare/css/document_compare.css"
