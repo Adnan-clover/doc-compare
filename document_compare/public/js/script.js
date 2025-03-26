@@ -1,7 +1,10 @@
 document.addEventListener("DOMContentLoaded", function() {
     console.log("redirected from Home")
+    // localStorage.removeItem("comparedData"); // Clears old response
+    // console.log("Cache cleared before fetching new comparison data.");
   
     let compareData = JSON.parse(localStorage.getItem("comparedData"));
+    // console.log(">>> compareData", compareData.section_details)
   
     if (compareData) {
         if (localStorage.getItem("uploadedData")) {
@@ -26,19 +29,19 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   
     if (!compareData && !uploadData) {
-        window.location.href = "/home";
+        window.location.href = "/home_test";
     }
   
     document.getElementById("findDiffBtn").style.display = "block";
     // document.getElementById("resetBtn").style.display = "none";
     document.getElementById("uploaded_files").style.display = "block";
-    document.getElementById("reAnalyzeBtn").style.display = "none";
+    // document.getElementById("reAnalyzeBtn").style.display = "none";
     document.getElementById("match-filter").style.display = "none";
     document.getElementById("icon-filter").style.display = "none";
   
     if (compareData) {
         document.getElementById("findDiffBtn").style.display = "none";
-        document.getElementById("reAnalyzeBtn").style.display = "block";
+        // document.getElementById("reAnalyzeBtn").style.display = "block";
         document.getElementById("match-filter").style.display = "block";
         document.getElementById("icon-filter").style.display = "block";
     }
@@ -56,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function() {
   
     document.getElementById("findDiffBtn").addEventListener("click", function() {
       console.log("findDiffBtn clicked");
-      const csrf = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+    //   const csrf = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
       const progressBar = document.getElementById("file");
   
       if (!uploadData.filename1 || !uploadData.filename2) {
@@ -88,17 +91,19 @@ document.addEventListener("DOMContentLoaded", function() {
           html2: uploadData.file2,
       };
   
-      fetch("/sections/load", {
+      fetch("/api/method/document_compare.api.load_sections", {
               method: "POST",
               headers: {
                   "Content-Type": "application/json",
-                  "X-CSRFToken": csrf
+                  "X-Frappe-CSRF-Token": frappe.csrf_token
               },
               body: JSON.stringify(compareData),
           })
           .then((response) => response.json())
-          .then((compareData) => {
+          .then((data) => {
+              let compareData = data.message
               if (compareData.success) {
+                console.log("compare data successfull>>", compareData.message)
   
                   // // Stop progress at 100%
                   // clearInterval(progressInterval);
@@ -114,8 +119,11 @@ document.addEventListener("DOMContentLoaded", function() {
                   // Save compareData to localStorage
                   localStorage.setItem("comparedData", JSON.stringify(compareData));
                   section_html1 = compareData.file1;
+                  console.log("section_html1", section_html1)
                   section_html2 = compareData.file2;
+                  print("section_html2", section_html2)
                   section_details = compareData.section_details;
+                  print("section_details", section_details)
                   document_id = compareData.document_id;
   
                   // Update document names
@@ -132,6 +140,8 @@ document.addEventListener("DOMContentLoaded", function() {
                   totalCount(section_details);
                   applyFilter(section_details);
                   initializeLeaderLines(section_details, compareData);
+
+                  console.log(">>>> line 144")
   
                   // Remove uploadedData from localStorage
                   if (localStorage.getItem("uploadedData")) {
@@ -153,7 +163,7 @@ document.addEventListener("DOMContentLoaded", function() {
           .finally(() => {
               // Hide the loader and show buttons again
               document.getElementById("loader").style.display = "none";
-              document.getElementById("reAnalyzeBtn").style.display = "block";
+            //   document.getElementById("reAnalyzeBtn").style.display = "block";
               document.getElementById("match-filter").style.display = "block";
           });
   });
@@ -394,6 +404,7 @@ document.addEventListener("DOMContentLoaded", function() {
   
         if (item.original_section_id) {
             const originalEl = document.getElementById(item.original_section_id);
+            console.log(">>>> originalEl", originalEl)
             if (originalEl) {
                 originalEl.classList.add(colorClass);
                 originalEl.setAttribute("data-category", changeType);
@@ -686,7 +697,7 @@ document.addEventListener("DOMContentLoaded", function() {
   
   
   function markSection(selectedIcon) {
-    const csrf_token = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+    // const csrf_token = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
     const iconGroup = selectedIcon.closest('.icon-group'); // Get the icon container
     const icons = iconGroup.querySelectorAll('i'); // Get all icons in the same row
     let section = selectedIcon.closest("section");
@@ -712,11 +723,11 @@ document.addEventListener("DOMContentLoaded", function() {
         };
   
         // Sending the POST request
-        fetch("/sections/mark", {
+        fetch("/api/method/document_compare.api.mark_sections", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "X-CSRFToken": csrf_token
+                    "X-Frappe-CSRF-Token": frappe.csrf_token
                 },
                 body: JSON.stringify(markData),
             })
@@ -803,7 +814,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
   
     } else {
-        window.location.href = "/home";
+        window.location.href = "/home_test";
     }
   };
   

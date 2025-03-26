@@ -4,19 +4,20 @@
     <link rel="stylesheet" href="/assets/document_compare/css/style1.css">
     <link rel="stylesheet" href="/assets/document_compare/css/all-min.css">
     <script src="/assets/document_compare/js/script.js"></script>
+    <script src="/assets/document_compare/js/leader-line.js"></script>
 {% endblock %}
 
 {% block page_content %}
 <section id="navbar">
     <div class="btn-wrapper">
-        <a href="#"><button style="width: 85px;" class="primary-btn"><i class="fa fa-home"></i>
+        <a href="/home_test"><button style="width: 85px;" class="primary-btn"><i class="fa fa-home"></i>
                 Home</button></a>
     </div>
     <div class="btn-wrapper m-left">
         <button style="width: 120px;" class="primary-btn" id="findDiffBtn">Compare <i
                 class="fas fa-exchange-alt"></i></button>
-        <button style="width: 120px;" class="primary-btn" id="reAnalyzeBtn" onclick="reAnalyzeCompareData();"><i
-                class="fas fa-sync-alt"></i> Re-analyze</button>
+        <!-- <button style="width: 120px;" class="primary-btn" id="reAnalyzeBtn" onclick="reAnalyzeCompareData();"><i
+                class="fas fa-sync-alt"></i> Re-analyze</button> -->
     </div>
     <div class="filters">
         <ul id="match-filter">
@@ -36,16 +37,16 @@
                 <button class="nav-btn next-btn" data-type="matched"><i class="fa fa-arrow-right"></i></button>
             </li>
             <li>
+                <button class="nav-btn prev-btn" data-type="added"><i class="fa fa-arrow-left"></i></button>
                 <label>
-                    <button class="nav-btn prev-btn" data-type="added"><i class="fa fa-arrow-left"></i></button>
                     <input type="checkbox" class="filter-checkbox" value="added" />
                     Added (0)
                 </label>
                 <button class="nav-btn next-btn" data-type="added"><i class="fa fa-arrow-right"></i></button>
             </li>
             <li>
+                <button class="nav-btn prev-btn" data-type="removed"><i class="fa fa-arrow-left"></i></button>
                 <label>
-                    <button class="nav-btn prev-btn" data-type="removed"><i class="fa fa-arrow-left"></i></button>
                     <input type="checkbox" class="filter-checkbox" value="removed" />
                     Removed (0)
                 </label>

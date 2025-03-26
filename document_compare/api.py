@@ -7,6 +7,7 @@ from . import utility
 from . import qroq_compare_four
 import frappe
 import json
+import re
 from frappe import _
 from frappe.utils import cint, flt
 from frappe.model.document import Document
@@ -23,6 +24,7 @@ def upload_files():
     try:
         # Get uploaded files
         file1 = frappe.request.files.get('file1')
+
         file2 = frappe.request.files.get('file2')
 
         if not file1 or not file2:
@@ -54,6 +56,13 @@ def upload_files():
         html1 = utility.convert_docx_to_html(file1_path, upload_folder, True)
         html2 = utility.convert_docx_to_html(file2_path, upload_folder, False)
 
+
+        # **Fix card_section issue using regex**
+        html1 = re.sub(r'class="\[\'card_section\'\]"', 'class="card_section"', html1)
+        html2 = re.sub(r'class="\[\'card_section\'\]"', 'class="card_section"', html2)
+        print(">>>>> html", html1)
+        print(">>>>> html2", html2)
+
         html1 = utility.remove_empty_sections(html1)
         html2 = utility.remove_empty_sections(html2)
 
@@ -62,17 +71,21 @@ def upload_files():
         html_data2 = utility.split_html_sections_in_list(
             utility.section_lines_with_section_using_bs4(html2))
 
+        print(">>> html_data1", html_data1)
+        print(">>> html_data2", html_data2)
+        
+
         html1 = "".join(utility.split_html_after_p_tags(html_data1))
         html2 = "".join(utility.split_html_after_p_tags(html_data2))
 
-        return frappe.response.update({
+        return {
             "success": True,
             "message": "Files uploaded successfully",
             "file1": html1,
             "file2": html2,
             "filename1": filename1,
             "filename2": filename2
-        })
+        }
 
     except Exception as e:
         frappe.log_error(f"File upload failed: {str(e)}")
@@ -81,13 +94,14 @@ def upload_files():
             "message": str(e)
         })
 
-def load_sections(request):
-    if request.method != 'POST':
+@frappe.whitelist(allow_guest=True)
+def load_sections():
+    if frappe.request.method != 'POST':
         # return JsonResponse({'message': 'Invalid request method'}, status=405)
         return {"message": _("Invalid request method"), "_server_messages": json.dumps([{"message": _("Invalid request method"), "indicator": "red"}])}, 405
 
     try:
-        data = json.loads(request.body)
+        data = json.loads(frappe.request.data)
     except json.JSONDecodeError:
         # return JsonResponse({'message': 'Invalid JSON'}, status=400)
         return {"message": _("Invalid JSON"), "_server_messages": json.dumps([{"message": _("Invalid JSON"), "indicator": "red"}])}, 400
@@ -102,7 +116,7 @@ def load_sections(request):
         return {"message": _("Both files are required"), "_server_messages": json.dumps([{"message": _("Both files are required"), "indicator": "red"}])}, 400
 
     # document_id = data.get('document_id')
-    document_id = data.get('document_id')
+    # document_id = data.get('document_id')
 
     # # Construct file paths using the configured upload folder (or MEDIA_ROOT)
     # upload_folder = getattr(settings, 'UPLOAD_FOLDER', settings.MEDIA_ROOT)
@@ -122,6 +136,10 @@ def load_sections(request):
     # Compare the extracted sections using the groq_compare_four module
     section_details = qroq_compare_four.compare_with_groq(section_data1, section_data2, replace_threshold=0.600000)
     replaced_sections = [item for item in section_details if item['change_type'] == 'replaced']
+
+    # Fix card_section bug before processing
+    section_html1 = re.sub(r'class="\[\'card_section\'\]"', 'class="card_section"', section_html1)
+    section_html2 = re.sub(r'class="\[\'card_section\'\]"', 'class="card_section"', section_html2)
 
     #####
     for section_item in replaced_sections:
@@ -178,101 +196,115 @@ def load_sections(request):
     removed_count = sum(1 for item in section_details if item["change_type"] == "removed")
     replaced_count = sum(1 for item in section_details if item["change_type"] == "replaced")
 
-    if document_id:
-        # Update existing document record
-        document = Document.objects.get(id=document_id)
-        document.original_doc = data['filename1']
-        document.modified_doc = data['filename2']
-        document.save()
+    # if document_id:
+    #     # Update existing document record
+    #     document = Document.objects.get(id=document_id)
+    #     document.original_doc = data['filename1']
+    #     document.modified_doc = data['filename2']
+    #     document.save()
 
-        # Update existing document comparison record
-        # doc_compare = DocumentComparison.objects.get(document=document)
-        doc_compare = get_doc("Document Comparison", {"document": document.name})
-        doc_compare.matched_count = matched_count
-        doc_compare.added_count = added_count
-        doc_compare.removed_count = removed_count
-        doc_compare.replaced_count = replaced_count
-        doc_compare.comparison_data = {
-            "section_details": section_details,
-            "html1": section_html1,  # Store original HTML
-            "html2": section_html2  # Store modified HTML
-        }
-        doc_compare.save()
+    #     # Update existing document comparison record
+    #     # doc_compare = DocumentComparison.objects.get(document=document)
+    #     doc_compare = get_doc("Document Comparison", {"document": document.name})
+    #     doc_compare.matched_count = matched_count
+    #     doc_compare.added_count = added_count
+    #     doc_compare.removed_count = removed_count
+    #     doc_compare.replaced_count = replaced_count
+    #     doc_compare.comparison_data = {
+    #         "section_details": section_details,
+    #         "html1": section_html1,  # Store original HTML
+    #         "html2": section_html2  # Store modified HTML
+    #     }
+    #     doc_compare.save()
 
-        # Assuming you have a Feedback Details doctype
-        try:
-            feedback_details = get_doc("Feedback Details", {"document": document.name})
-            feedback_details.save()
-        except frappe.DoesNotExistError:
-            pass # handle the case where the Feedback Details do not exist.# If other fields need updates, modify before saving.
+    #     # Assuming you have a Feedback Details doctype
+    #     try:
+    #         feedback_details = get_doc("Feedback Details", {"document": document.name})
+    #         feedback_details.save()
+    #     except frappe.DoesNotExistError:
+    #         pass # handle the case where the Feedback Details do not exist.# If other fields need updates, modify before saving.
 
-        response = {
-            'success': True,
-            'message': _('Files updated successfully'),
-            'user': document.user,
-            'original_doc_name': document.original_doc,
-            'modified_doc_name': document.modified_doc,
-            'document_id': document.name,
-            'file1': section_html1,
-            'file2': section_html2,
-            'section_details': section_details,
-            'matched_count': matched_count,
-            'added_count': added_count,
-            'removed_count': removed_count,
-            'replaced_count': replaced_count,
-        }
-    else:
-        document = Document("Document")
-        document.user = frappe.session.user
-        document.original_doc = data['filename1']
-        document.modified_doc = data['filename2']
-        document.insert()
+    #     response = {
+    #         'success': True,
+    #         'message': _('Files updated successfully'),
+    #         'user': document.user,
+    #         'original_doc_name': document.original_doc,
+    #         'modified_doc_name': document.modified_doc,
+    #         'document_id': document.name,
+    #         'file1': section_html1,
+    #         'file2': section_html2,
+    #         'section_details': section_details,
+    #         'matched_count': matched_count,
+    #         'added_count': added_count,
+    #         'removed_count': removed_count,
+    #         'replaced_count': replaced_count,
+    #     }
+    # else:
+    #     document = Document("Document")
+    #     document.user = frappe.session.user
+    #     document.original_doc = data['filename1']
+    #     document.modified_doc = data['filename2']
+    #     document.insert()
 
-        doc_compare = Document("Document Comparison")
-        doc_compare.document = document.name
-        doc_compare.matched_count = matched_count
-        doc_compare.added_count = added_count
-        doc_compare.removed_count = removed_count
-        doc_compare.replaced_count = replaced_count
-        doc_compare.comparison_data = {
-            "section_details": section_details,
-            "html1": section_html1,
-            "html2": section_html2
-        }
-        doc_compare.insert()
+    #     doc_compare = Document("Document Comparison")
+    #     doc_compare.document = document.name
+    #     doc_compare.matched_count = matched_count
+    #     doc_compare.added_count = added_count
+    #     doc_compare.removed_count = removed_count
+    #     doc_compare.replaced_count = replaced_count
+    #     doc_compare.comparison_data = {
+    #         "section_details": section_details,
+    #         "html1": section_html1,
+    #         "html2": section_html2
+    #     }
+    #     doc_compare.insert()
 
-        # Assuming you have a Feedback Details doctype
-        feedback_details = Document("Feedback Details")
-        feedback_details.document = document.name
-        feedback_details.insert()
-
-
-        response = {
-            'success': True,
-            'message':  _('Files uploaded successfully'),
-            'user': document.user,
-            'original_doc_name': document.original_doc,
-            'modified_doc_name': document.modified_doc,
-            'document_id': document.name,
-            'file1': section_html1,
-            'file2': section_html2,
-            'section_details': section_details,
-            'matched_count': matched_count,
-            'added_count': added_count,
-            'removed_count': removed_count,
-            'replaced_count': replaced_count,
-        }
-
-    return response
+    #     # Assuming you have a Feedback Details doctype
+    #     feedback_details = Document("Feedback Details")
+    #     feedback_details.document = document.name
+    #     feedback_details.insert()
 
 
-def mark_sections(request):
-    if request.method != 'POST':
+    # response = {
+    #     'success': True,
+    #     'message':  _('Files uploaded successfully'),
+    #     # 'user': document.user,
+    #     # 'original_doc_name': document.original_doc,
+    #     # 'modified_doc_name': document.modified_doc,
+    #     # 'document_id': document.name,
+    #     'file1': section_html1,
+    #     'file2': section_html2,
+    #     'section_details': section_details,
+    #     'matched_count': matched_count,
+    #     'added_count': added_count,
+    #     'removed_count': removed_count,
+    #     'replaced_count': replaced_count,
+    # }
+
+    return {
+        'success': True,
+        'message':  _('Files uploaded successfully'),
+        # 'user': document.user,
+        # 'original_doc_name': original_doc,
+        # 'modified_doc_name': modified_doc,
+        # 'document_id': document.name,
+        'file1': section_html1,
+        'file2': section_html2,
+        'section_details': section_details,
+        'matched_count': matched_count,
+        'added_count': added_count,
+        'removed_count': removed_count,
+        'replaced_count': replaced_count,
+    }
+
+@frappe.whitelist(allow_guest=True)
+def mark_sections():
+    if frappe.request.method != 'POST':
         # return JsonResponse({'message': 'Invalid request method'}, status=405)
         return {"message": _("Invalid request method"), "_server_messages": json.dumps([{"message": _("Invalid request method"), "indicator": "red"}])}, 405
     
     try:
-        data = json.loads(request.body)
+        data = json.loads(frappe.request.data)
     except json.JSONDecodeError:
         # return JsonResponse({'message': 'Invalid JSON'}, status=400)
         return {"message": _("Invalid JSON"), "_server_messages": json.dumps([{"message": _("Invalid JSON"), "indicator": "red"}])}, 400

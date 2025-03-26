@@ -174,6 +174,8 @@ def compare_with_groq1(file1_path, file2_path):
         original_dict = {}
         modified_dict = {}
 
+        print(">>>>>> find_matching_sections1")
+
         for item in original_texts:
             original_dict.update(item)
         for item in modified_texts:
