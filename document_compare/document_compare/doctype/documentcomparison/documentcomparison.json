@@ -1,0 +1,74 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-03-27 08:37:30.713241",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "document",
+  "matched_count",
+  "added_count",
+  "removed_count",
+  "replaced_count",
+  "comparison_data"
+ ],
+ "fields": [
+  {
+   "fieldname": "matched_count",
+   "fieldtype": "Int",
+   "label": "matched_count"
+  },
+  {
+   "fieldname": "added_count",
+   "fieldtype": "Int",
+   "label": "added_count"
+  },
+  {
+   "fieldname": "removed_count",
+   "fieldtype": "Int",
+   "label": "removed_count"
+  },
+  {
+   "fieldname": "replaced_count",
+   "fieldtype": "Int",
+   "label": "replaced_count"
+  },
+  {
+   "fieldname": "comparison_data",
+   "fieldtype": "JSON",
+   "label": "comparison_data"
+  },
+  {
+   "fieldname": "document",
+   "fieldtype": "Link",
+   "label": "document",
+   "options": "Document"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-03-27 10:17:35.002234",
+ "modified_by": "Administrator",
+ "module": "Document Compare",
+ "name": "DocumentComparison",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

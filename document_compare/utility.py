@@ -670,8 +670,6 @@ def convert_docx_to_html(file, temp_dir, original=True):
     """Convert DOCX to HTML with page numbers in section tags."""
     doc = "org" if original else "mod"
     system = platform.system()
-    print('--->', system)
-    print("after system line print")
 
     def create_pdf(input_path):
         """Convert DOCX to PDF using Aspose.Words and return the PDF as a binary stream."""
@@ -694,7 +692,6 @@ def convert_docx_to_html(file, temp_dir, original=True):
         """Convert DOCX to PDF using LibreOffice, return PDF bytes, and delete the PDF after conversion."""
         
         output_path = os.path.splitext(input_path)[0] + ".pdf"
-        print(">>>>>> create_pdf_in_linux", output_path)
 
         try:
             # Run LibreOffice to convert DOCX to PDF
@@ -729,15 +726,12 @@ def convert_docx_to_html(file, temp_dir, original=True):
         # Load the Word document
         if system == "Linux":
             pdf_data = create_pdf_in_linux(docx_path)
-            print(">>>>>>>>>> pdf_data", pdf_data)
         else:
             pdf_data = create_pdf(docx_path)
 
         pdf_buffer = io.BytesIO(pdf_data)
-        print(">>X>X",pdf_buffer)
         # Open PDF with PyMuPDF
         pdf_document = fitz.open(stream=pdf_buffer.getvalue(), filetype="pdf")
-        print(">>>> pdf doc",pdf_document)
 
         # Get text blocks with their page numbers
         page_blocks = []

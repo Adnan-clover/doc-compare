@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
     console.log("redirected from Home")
-    // localStorage.removeItem("comparedData"); // Clears old response
+    localStorage.removeItem("comparedData"); // Clears old response
     // console.log("Cache cleared before fetching new comparison data.");
   
     let compareData = JSON.parse(localStorage.getItem("comparedData"));

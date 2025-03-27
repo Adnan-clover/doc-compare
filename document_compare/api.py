@@ -57,12 +57,6 @@ def upload_files():
         html2 = utility.convert_docx_to_html(file2_path, upload_folder, False)
 
 
-        # **Fix card_section issue using regex**
-        html1 = re.sub(r'class="\[\'card_section\'\]"', 'class="card_section"', html1)
-        html2 = re.sub(r'class="\[\'card_section\'\]"', 'class="card_section"', html2)
-        print(">>>>> html", html1)
-        print(">>>>> html2", html2)
-
         html1 = utility.remove_empty_sections(html1)
         html2 = utility.remove_empty_sections(html2)
 
@@ -71,8 +65,6 @@ def upload_files():
         html_data2 = utility.split_html_sections_in_list(
             utility.section_lines_with_section_using_bs4(html2))
 
-        print(">>> html_data1", html_data1)
-        print(">>> html_data2", html_data2)
         
 
         html1 = "".join(utility.split_html_after_p_tags(html_data1))
@@ -196,81 +188,109 @@ def load_sections():
     removed_count = sum(1 for item in section_details if item["change_type"] == "removed")
     replaced_count = sum(1 for item in section_details if item["change_type"] == "replaced")
 
-    # if document_id:
-    #     # Update existing document record
-    #     document = Document.objects.get(id=document_id)
-    #     document.original_doc = data['filename1']
-    #     document.modified_doc = data['filename2']
-    #     document.save()
+    # Try to find an existing document
+    document = frappe.get_value("Document", {"original_doc": data['filename1'], "modified_doc": data['filename2']}, "name")
+    print(">>>>>>> document",document)
 
-    #     # Update existing document comparison record
-    #     # doc_compare = DocumentComparison.objects.get(document=document)
-    #     doc_compare = get_doc("Document Comparison", {"document": document.name})
-    #     doc_compare.matched_count = matched_count
-    #     doc_compare.added_count = added_count
-    #     doc_compare.removed_count = removed_count
-    #     doc_compare.replaced_count = replaced_count
-    #     doc_compare.comparison_data = {
-    #         "section_details": section_details,
-    #         "html1": section_html1,  # Store original HTML
-    #         "html2": section_html2  # Store modified HTML
-    #     }
-    #     doc_compare.save()
+    if document:
+        # Update existing document record
+        # document = Document.objects.get(id=document_id)
+        # document.original_doc = data['filename1']
+        # document.modified_doc = data['filename2']
+        # document.save()
 
-    #     # Assuming you have a Feedback Details doctype
-    #     try:
-    #         feedback_details = get_doc("Feedback Details", {"document": document.name})
-    #         feedback_details.save()
-    #     except frappe.DoesNotExistError:
-    #         pass # handle the case where the Feedback Details do not exist.# If other fields need updates, modify before saving.
+        # Update existing document
+        doc = frappe.get_doc("Document", document)
+        doc.original_doc = data['filename1']
+        doc.modified_doc = data['filename2']
+        doc.save(ignore_permissions=True)
 
-    #     response = {
-    #         'success': True,
-    #         'message': _('Files updated successfully'),
-    #         'user': document.user,
-    #         'original_doc_name': document.original_doc,
-    #         'modified_doc_name': document.modified_doc,
-    #         'document_id': document.name,
-    #         'file1': section_html1,
-    #         'file2': section_html2,
-    #         'section_details': section_details,
-    #         'matched_count': matched_count,
-    #         'added_count': added_count,
-    #         'removed_count': removed_count,
-    #         'replaced_count': replaced_count,
-    #     }
-    # else:
-    #     document = Document("Document")
-    #     document.user = frappe.session.user
-    #     document.original_doc = data['filename1']
-    #     document.modified_doc = data['filename2']
-    #     document.insert()
+        # Update existing document comparison record
+        # doc_compare = DocumentComparison.objects.get(document=document)
+        doc_compare = get_doc("DocumentComparison", {"document": document})
+        doc_compare.matched_count = matched_count
+        doc_compare.added_count = added_count
+        doc_compare.removed_count = removed_count
+        doc_compare.replaced_count = replaced_count
+        doc_compare.comparison_data = json.dumps({
+            "section_details": section_details,
+            "html1": section_html1,  # Store original HTML
+            "html2": section_html2  # Store modified HTML
+        })
+        doc_compare.save(ignore_permissions=True)
 
-    #     doc_compare = Document("Document Comparison")
-    #     doc_compare.document = document.name
-    #     doc_compare.matched_count = matched_count
-    #     doc_compare.added_count = added_count
-    #     doc_compare.removed_count = removed_count
-    #     doc_compare.replaced_count = replaced_count
-    #     doc_compare.comparison_data = {
-    #         "section_details": section_details,
-    #         "html1": section_html1,
-    #         "html2": section_html2
-    #     }
-    #     doc_compare.insert()
+        response = {
+            'success': True,
+            'message': _('Files updated successfully'),
+            # 'user': document.user,
+            # 'original_doc_name': document.original_doc,
+            # 'modified_doc_name': document.modified_doc,
+            # 'document_id': document.name,
+            'file1': section_html1,
+            'file2': section_html2,
+            'section_details': section_details,
+            'matched_count': matched_count,
+            'added_count': added_count,
+            'removed_count': removed_count,
+            'replaced_count': replaced_count,
+        }
+    else:
+         # Create new Document
+        doc = frappe.get_doc({
+            "doctype": "Document",
+            "original_doc": data['filename1'],
+            "modified_doc": data['filename2']
+        })
+        print(">>>>> doc", doc)
+        doc.insert(ignore_permissions=True)
 
-    #     # Assuming you have a Feedback Details doctype
-    #     feedback_details = Document("Feedback Details")
-    #     feedback_details.document = document.name
-    #     feedback_details.insert()
+        # Create DocumentComparison
+        doc_compare = frappe.get_doc({
+            "doctype": "DocumentComparison",
+            "document": doc.name,
+            "matched_count": matched_count,
+            "added_count": added_count,
+            "removed_count": removed_count,
+            "replaced_count": replaced_count,
+            "comparison_data": json.dumps({
+                "section_details": section_details,
+                "html1": section_html1,
+                "html2": section_html2
+            })
+        })
+        doc_compare.insert(ignore_permissions=True)
+
+         # Create Feedback Details
+        feedback_details = frappe.get_doc({
+            "doctype": "FeedbackDetails",
+            "document": doc.name,
+            "section_info": json.dumps(section_details)
+        })
+        feedback_details.insert(ignore_permissions=True)
 
 
-    # response = {
+        response = {
+            'success': True,
+            'message':  _('Files uploaded successfully'),
+            # 'user': document.user,
+            # 'original_doc_name': document.original_doc,
+            # 'modified_doc_name': document.modified_doc,
+            # 'document_id': document.name,
+            'file1': section_html1,
+            'file2': section_html2,
+            'section_details': section_details,
+            'matched_count': matched_count,
+            'added_count': added_count,
+            'removed_count': removed_count,
+            'replaced_count': replaced_count,
+        }
+    return response
+    # return {
     #     'success': True,
     #     'message':  _('Files uploaded successfully'),
     #     # 'user': document.user,
-    #     # 'original_doc_name': document.original_doc,
-    #     # 'modified_doc_name': document.modified_doc,
+    #     # 'original_doc_name': original_doc,
+    #     # 'modified_doc_name': modified_doc,
     #     # 'document_id': document.name,
     #     'file1': section_html1,
     #     'file2': section_html2,
@@ -280,22 +300,6 @@ def load_sections():
     #     'removed_count': removed_count,
     #     'replaced_count': replaced_count,
     # }
-
-    return {
-        'success': True,
-        'message':  _('Files uploaded successfully'),
-        # 'user': document.user,
-        # 'original_doc_name': original_doc,
-        # 'modified_doc_name': modified_doc,
-        # 'document_id': document.name,
-        'file1': section_html1,
-        'file2': section_html2,
-        'section_details': section_details,
-        'matched_count': matched_count,
-        'added_count': added_count,
-        'removed_count': removed_count,
-        'replaced_count': replaced_count,
-    }
 
 @frappe.whitelist(allow_guest=True)
 def mark_sections():

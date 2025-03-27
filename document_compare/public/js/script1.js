@@ -222,17 +222,17 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function viewEditDocument(documentId) {
-    const csrf_token = document.querySelector('input[name="csrfmiddlewaretoken"]').value; // Get CSRF token
+    // const csrf_token = document.querySelector('input[name="csrfmiddlewaretoken"]').value; // Get CSRF token
 
     const requestData = {
         document_id: documentId
     };
 
-    fetch("/document/view", { // Change this URL to your backend endpoint
+    fetch("/api/method/document_compare.api.view_document", { // Change this URL to your backend endpoint
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRFToken": csrf_token
+                "X-Frappe-CSRF-Token": frappe.csrf_token
             },
             body: JSON.stringify(requestData)
         })

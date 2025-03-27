@@ -1,0 +1,49 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-03-27 08:28:39.679760",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "original_doc",
+  "modified_doc"
+ ],
+ "fields": [
+  {
+   "fieldname": "original_doc",
+   "fieldtype": "Attach",
+   "label": "original_doc"
+  },
+  {
+   "fieldname": "modified_doc",
+   "fieldtype": "Attach",
+   "label": "modified_doc"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-03-27 08:28:39.679760",
+ "modified_by": "Administrator",
+ "module": "Document Compare",
+ "name": "Document",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
